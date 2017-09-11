@@ -1,0 +1,1323 @@
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     1
+
+
+MACRO ASSEMBLER A51 V8.02a
+OBJECT MODULE PLACED IN light control.OBJ
+ASSEMBLER INVOKED BY: D:\KEIL\C51\BIN\A51.EXE light control.asm NOMOD51 SET(SMALL) DEBUG EP
+
+LOC  OBJ            LINE     SOURCE
+
+                       1     ;$include (C8051F310.inc)
+                +1     2     ;---------------------------------------------------------------------------
+                +1     3     ;  
+                +1     4     ;  
+                +1     5     ;
+                +1     6     ;
+                +1     7     ;  FILE NAME   : C8051F310.INC
+                +1     8     ;  TARGET MCUs : C8051F310, 'F311
+                +1     9     ;  DESCRIPTION : Register/bit definitions for the C8051F31x product family.
+                +1    10     ;
+                +1    11     ;  REVISION 1.3
+                +1    12     ;     -- added ESPI0 and PSPI0
+                +1    13     ;  REVISION 1.2
+                +1    14     ;     -- added VDM0CN (0xff)   
+                +1    15     ;
+                +1    16     ;  REVISION 1.1
+                +1    17     ;     -- changed TARGET MCUs to 'F310, 'F311
+                +1    18     ;     -- SPICFG --> SPI0CFG
+                +1    19     ;     -- SPICKR --> SPI0CKR
+                +1    20     ;     -- SPIDAT --> SPI0DAT
+                +1    21     ;     -- removed CLKMUL (0xb9)
+                +1    22     ;     -- AMUX0N --> AMX0N
+                +1    23     ;     -- AMUX0P --> AMX0P
+                +1    24     ;
+                +1    25     ;---------------------------------------------------------------------------
+                +1    26     
+                +1    27     ; BYTE Registers 
+  0080          +1    28     P0       DATA  080H     ; PORT 0                                                   
+  0081          +1    29     SP       DATA  081H     ; STACK POINTER                                            
+  0082          +1    30     DPL      DATA  082H     ; DATA POINTER - LOW BYTE                                  
+  0083          +1    31     DPH      DATA  083H     ; DATA POINTER - HIGH BYTE                                 
+  0087          +1    32     PCON     DATA  087H     ; POWER CONTROL                                            
+  0088          +1    33     TCON     DATA  088H     ; TIMER CONTROL                                            
+  0089          +1    34     TMOD     DATA  089H     ; TIMER MODE                                               
+  008A          +1    35     TL0      DATA  08AH     ; TIMER 0 - LOW BYTE                                       
+  008B          +1    36     TL1      DATA  08BH     ; TIMER 1 - LOW BYTE                                       
+  008C          +1    37     TH0      DATA  08CH     ; TIMER 0 - HIGH BYTE                                      
+  008D          +1    38     TH1      DATA  08DH     ; TIMER 1 - HIGH BYTE                                      
+  008E          +1    39     CKCON    DATA  08EH     ; CLOCK CONTROL                                            
+  008F          +1    40     PSCTL    DATA  08FH     ; PROGRAM STORE R/W CONTROL                                
+  0090          +1    41     P1       DATA  090H     ; PORT 1                                                   
+  0091          +1    42     TMR3CN   DATA  091H     ; TIMER 3 CONTROL                                          
+  0092          +1    43     TMR3RLL  DATA  092H     ; TIMER 3 RELOAD LOW                                       
+  0093          +1    44     TMR3RLH  DATA  093H     ; TIMER 3 RELOAD HIGH                                      
+  0094          +1    45     TMR3L    DATA  094H     ; TIMER 3 LOW BYTE                                         
+  0095          +1    46     TMR3H    DATA  095H     ; TIMER 3 HIGH BYTE                                        
+  0098          +1    47     SCON0    DATA  098H     ; SERIAL PORT 0 CONTROL                                    
+  0099          +1    48     SBUF0    DATA  099H     ; SERIAL PORT 0 BUFFER                                     
+  009A          +1    49     CPT1CN   DATA  09AH     ; COMPARATOR 1 CONTROL                                     
+  009B          +1    50     CPT0CN   DATA  09BH     ; COMPARATOR 0 CONTROL                                     
+  009C          +1    51     CPT1MD   DATA  09CH     ; COMPARATOR 1 MODE                                        
+  009D          +1    52     CPT0MD   DATA  09DH     ; COMPARATOR 0 MODE                                        
+  009E          +1    53     CPT1MX   DATA  09EH     ; COMPARATOR 1 MUX                                         
+  009F          +1    54     CPT0MX   DATA  09FH     ; COMPARATOR 0 MUX                                         
+  00A0          +1    55     P2       DATA  0A0H     ; PORT 2                                                   
+  00A1          +1    56     SPI0CFG  DATA  0A1H     ; SPI0 CONFIGURATION                                        
+  00A2          +1    57     SPI0CKR  DATA  0A2H     ; SPI0 CLOCK CONFIGURATION                                  
+  00A3          +1    58     SPI0DAT  DATA  0A3H     ; SPI0 DATA                                         
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     2
+
+  00A4          +1    59     P0MDOUT  DATA  0A4H     ; PORT 0 OUTPUT MODE                                       
+  00A5          +1    60     P1MDOUT  DATA  0A5H     ; PORT 1 OUTPUT MODE                                       
+  00A6          +1    61     P2MDOUT  DATA  0A6H     ; PORT 2 OUTPUT MODE                                       
+  00A7          +1    62     P3MDOUT  DATA  0A7H     ; PORT 3 OUTPUT MODE                                       
+  00A8          +1    63     IE       DATA  0A8H     ; INTERRUPT ENABLE                                         
+  00A9          +1    64     CLKSEL   DATA  0A9H     ; CLOCK SOURCE SELECT                                      
+  00AA          +1    65     EMI0CN   DATA  0AAH     ; EXTERNAL MEMORY INTERFACE CONTROL                        
+  00B0          +1    66     P3       DATA  0B0H     ; PORT 3                                                   
+  00B1          +1    67     OSCXCN   DATA  0B1H     ; EXTERNAL OSCILLATOR CONTROL                              
+  00B2          +1    68     OSCICN   DATA  0B2H     ; INTERNAL OSCILLATOR CONTROL                              
+  00B3          +1    69     OSCICL   DATA  0B3H     ; INTERNAL OSCILLATOR CALIBRATION                          
+  00B5          +1    70     FLACL    DATA  0B5H     ; FLASH ACCESS LIMIT
+  00B6          +1    71     FLSCL    DATA  0B6H     ; FLASH SCALE                                              
+  00B7          +1    72     FLKEY    DATA  0B7H     ; FLASH LOCK & KEY                                         
+  00B8          +1    73     IP       DATA  0B8H     ; INTERRUPT PRIORITY   
+  00BA          +1    74     AMX0N    DATA  0BAH     ; ADC0 MUX NEGATIVE CHANNEL SELECTION                      
+  00BB          +1    75     AMX0P    DATA  0BBH     ; ADC0 MUX POSITIVE CHANNEL SELECTION                      
+  00BC          +1    76     ADC0CF   DATA  0BCH     ; ADC0 CONFIGURATION                                       
+  00BD          +1    77     ADC0L    DATA  0BDH     ; ADC0 DATA LOW                                            
+  00BE          +1    78     ADC0H    DATA  0BEH     ; ADC0 DATA HIGH                                           
+  00C0          +1    79     SMB0CN   DATA  0C0H     ; SMBUS CONTROL                                            
+  00C1          +1    80     SMB0CF   DATA  0C1H     ; SMBUS CONFIGURATION                                      
+  00C2          +1    81     SMB0DAT  DATA  0C2H     ; SMBUS DATA                                             
+  00C3          +1    82     ADC0GTL  DATA  0C3H     ; ADC0 GREATER-THAN LOW                                    
+  00C4          +1    83     ADC0GTH  DATA  0C4H     ; ADC0 GREATER-THAN HIGH                                   
+  00C5          +1    84     ADC0LTL  DATA  0C5H     ; ADC0 LESS-THAN LOW                                       
+  00C6          +1    85     ADC0LTH  DATA  0C6H     ; ADC0 LESS-THAN HIGH                                      
+  00C8          +1    86     TMR2CN   DATA  0C8H     ; TIMER 2 CONTROL                                                
+  00CA          +1    87     TMR2RLL  DATA  0CAH     ; TIMER 2 RELOAD LOW                                       
+  00CB          +1    88     TMR2RLH  DATA  0CBH     ; TIMER 2 RELOAD HIGH                                      
+  00CC          +1    89     TMR2L    DATA  0CCH     ; TIMER 2 LOW BYTE                                         
+  00CD          +1    90     TMR2H    DATA  0CDH     ; TIMER 2 HIGH BYTE                                        
+  00D0          +1    91     PSW      DATA  0D0H     ; PROGRAM STATUS WORD                                      
+  00D1          +1    92     REF0CN   DATA  0D1H     ; VOLTAGE REFERENCE 0 CONTROL                              
+  00D4          +1    93     P0SKIP   DATA  0D4H     ; PORT 0 CROSSBAR SKIP                                     
+  00D5          +1    94     P1SKIP   DATA  0D5H     ; PORT 1 CROSSBAR SKIP                                     
+  00D6          +1    95     P2SKIP   DATA  0D6H     ; PORT 2 CROSSBAR SKIP     
+  00D8          +1    96     PCA0CN   DATA  0D8H     ; PCA0 CONTROL                                             
+  00D9          +1    97     PCA0MD   DATA  0D9H     ; PCA0 MODE                                                
+  00DA          +1    98     PCA0CPM0 DATA  0DAH     ; PCA0 MODULE 0 MODE                                       
+  00DB          +1    99     PCA0CPM1 DATA  0DBH     ; PCA0 MODULE 1 MODE                                       
+  00DC          +1   100     PCA0CPM2 DATA  0DCH     ; PCA0 MODULE 2 MODE     
+  00DD          +1   101     PCA0CPM3 DATA  0DDH     ; PCA0 MODULE 3 MODE                                       
+  00DE          +1   102     PCA0CPM4 DATA  0DEH     ; PCA0 MODULE 4 MODE                                    
+  00E0          +1   103     ACC      DATA  0E0H     ; ACCUMULATOR                                              
+  00E1          +1   104     XBR0     DATA  0E1H     ; DIGITAL CROSSBAR CONFIGURATION REGISTER 0                
+  00E2          +1   105     XBR1     DATA  0E2H     ; DIGITAL CROSSBAR CONFIGURATION REGISTER 1                
+  00E4          +1   106     IT01CF   DATA  0E4H     ; INT0/INT1 CONFIGURATION                                  
+  00E6          +1   107     EIE1     DATA  0E6H     ; EXTERNAL INTERRUPT ENABLE 1                     
+  00E8          +1   108     ADC0CN   DATA  0E8H     ; ADC 0 CONTROL                                            
+  00E9          +1   109     PCA0CPL1 DATA  0E9H     ; PCA0 MODULE 1 CAPTURE/COMPARE REGISTER LOW BYTE          
+  00EA          +1   110     PCA0CPH1 DATA  0EAH     ; PCA0 MODULE 1 CAPTURE/COMPARE REGISTER HIGH BYTE         
+  00EB          +1   111     PCA0CPL2 DATA  0EBH     ; PCA0 MODULE 2 CAPTURE/COMPARE REGISTER LOW BYTE          
+  00EC          +1   112     PCA0CPH2 DATA  0ECH     ; PCA0 MODULE 2 CAPTURE/COMPARE REGISTER HIGH BYTE         
+  00ED          +1   113     PCA0CPL3 DATA  0EDH     ; PCA0 MODULE 3 CAPTURE/COMPARE REGISTER LOW BYTE          
+  00EE          +1   114     PCA0CPH3 DATA  0EEH     ; PCA0 MODULE 3 CAPTURE/COMPARE REGISTER HIGH BYTE         
+  00EF          +1   115     RSTSRC   DATA  0EFH     ; RESET SOURCE                                             
+  00F0          +1   116     B        DATA  0F0H     ; B REGISTER                                               
+  00F1          +1   117     P0MDIN   DATA  0F1H     ; PORT 0 INPUT MODE REGISTER                               
+  00F2          +1   118     P1MDIN   DATA  0F2H     ; PORT 1 INPUT MODE REGISTER                               
+  00F3          +1   119     P2MDIN   DATA  0F3H     ; PORT 2 INPUT MODE REGISTER                               
+  00F4          +1   120     P3MDIN   DATA  0F4H     ; PORT 3 INPUT MODE REGISTER                               
+  00F6          +1   121     EIP1     DATA  0F6H     ; EXTERNAL INTERRUPT PRIORITY 1
+  00F8          +1   122     SPI0CN   DATA  0F8H     ; SPI0 CONTROL                                             
+  00F9          +1   123     PCA0L    DATA  0F9H     ; PCA0 COUNTER REGISTER LOW BYTE                           
+  00FA          +1   124     PCA0H    DATA  0FAH     ; PCA0 COUNTER REGISTER HIGH BYTE                          
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     3
+
+  00FB          +1   125     PCA0CPL0 DATA  0FBH     ; PCA MODULE 0 CAPTURE/COMPARE REGISTER LOW BYTE           
+  00FC          +1   126     PCA0CPH0 DATA  0FCH     ; PCA MODULE 0 CAPTURE/COMPARE REGISTER HIGH BYTE          
+  00FD          +1   127     PCA0CPL4 DATA  0FDH     ; PCA MODULE 4 CAPTURE/COMPARE REGISTER LOW BYTE           
+  00FE          +1   128     PCA0CPH4 DATA  0FEH     ; PCA MODULE 4 CAPTURE/COMPARE REGISTER HIGH BYTE      
+  00FF          +1   129     VDM0CN    DATA  0FFH ; VDD MONITOR CONTROL
+                +1   130     
+                +1   131     ;------------------------------------------------------------------------------
+                +1   132     ;BIT DEFINITIONS
+                +1   133     ;
+                +1   134     ; TCON 88H
+  0088          +1   135     IT0      BIT   TCON.0   ; EXT. INTERRUPT 0 TYPE
+  0089          +1   136     IE0      BIT   TCON.1   ; EXT. INTERRUPT 0 EDGE FLAG
+  008A          +1   137     IT1      BIT   TCON.2   ; EXT. INTERRUPT 1 TYPE
+  008B          +1   138     IE1      BIT   TCON.3   ; EXT. INTERRUPT 1 EDGE FLAG
+  008C          +1   139     TR0      BIT   TCON.4   ; TIMER 0 ON/OFF CONTROL
+  008D          +1   140     TF0      BIT   TCON.5   ; TIMER 0 OVERFLOW FLAG
+  008E          +1   141     TR1      BIT   TCON.6   ; TIMER 1 ON/OFF CONTROL
+  008F          +1   142     TF1      BIT   TCON.7   ; TIMER 1 OVERFLOW FLAG
+                +1   143     
+                +1   144     ; SCON0  0x98 
+  0098          +1   145     RI0      BIT   SCON0.0  ; RECEIVE INTERRUPT FLAG                                
+  0099          +1   146     TI0      BIT   SCON0.1  ; TRANSMIT INTERRUPT FLAG                               
+  009A          +1   147     RB80     BIT   SCON0.2  ; RECEIVE BIT 8                                         
+  009B          +1   148     TB80     BIT   SCON0.3  ; TRANSMIT BIT 8                                        
+  009C          +1   149     REN0     BIT   SCON0.4  ; RECEIVE ENABLE                                        
+  009D          +1   150     MCE0     BIT   SCON0.5  ; MULTIPROCESSOR COMMUNICATION ENABLE                   
+  009F          +1   151     S0MODE   BIT   SCON0.7  ; SERIAL MODE CONTROL BIT 0                             
+                +1   152     
+                +1   153     ; IE  0xA8 
+  00A8          +1   154     EX0      BIT   IE.0     ; EXTERNAL INTERRUPT 0 ENABLE                           
+  00A9          +1   155     ET0      BIT   IE.1     ; TIMER 0 INTERRUPT ENABLE                              
+  00AA          +1   156     EX1      BIT   IE.2     ; EXTERNAL INTERRUPT 1 ENABLE                           
+  00AB          +1   157     ET1      BIT   IE.3     ; TIMER 1 INTERRUPT ENABLE                              
+  00AC          +1   158     ES0      BIT   IE.4     ; UART0 INTERRUPT ENABLE                                
+  00AD          +1   159     ET2      BIT   IE.5     ; TIMER 2 INTERRUPT ENABLE                              
+  00AE          +1   160     ESPI0    BIT   IE.6     ; SPI0 INTERRUPT ENABLE
+  00AF          +1   161     EA       BIT   IE.7     ; GLOBAL INTERRUPT ENABLE                               
+                +1   162     
+                +1   163     ; IP  0xB8 
+  00B8          +1   164     PX0      BIT   IP.0     ; EXTERNAL INTERRUPT 0 PRIORITY                         
+  00B9          +1   165     PT0      BIT   IP.1     ; TIMER 0 PRIORITY                                      
+  00BA          +1   166     PX1      BIT   IP.2     ; EXTERNAL INTERRUPT 1 PRIORITY                         
+  00BB          +1   167     PT1      BIT   IP.3     ; TIMER 1 PRIORITY                                      
+  00BC          +1   168     PS0      BIT   IP.4     ; UART0 PRIORITY                                        
+  00BD          +1   169     PT2      BIT   IP.5     ; TIMER 2 PRIORITY                                      
+  00BE          +1   170     PSPI0    BIT   IP.6     ; SPI0 INTERRUPT PRIORITY
+                +1   171     
+                +1   172     ; SMB0CN 0xC0 
+  00C0          +1   173     SI       BIT   SMB0CN.0 ; SMBUS0 INTERRUPT FLAG                                 
+  00C1          +1   174     ACK      BIT   SMB0CN.1 ; ACKNOWLEDGE FLAG                                      
+  00C2          +1   175     ARBLOST  BIT   SMB0CN.2 ; ARBITRATION LOST INDICATOR                            
+  00C3          +1   176     ACKRQ    BIT   SMB0CN.3 ; ACKNOWLEDGE REQUEST                                   
+  00C4          +1   177     STO      BIT   SMB0CN.4 ; STOP FLAG                                             
+  00C5          +1   178     STA      BIT   SMB0CN.5 ; START FLAG                                            
+  00C6          +1   179     TXMODE   BIT   SMB0CN.6 ; TRANSMIT MODE INDICATOR                               
+  00C7          +1   180     MASTER   BIT   SMB0CN.7 ; MASTER/SLAVE INDICATOR                                
+                +1   181     
+                +1   182     ; TMR2CN 0xC8 
+  00C8          +1   183     T2XCLK   BIT   TMR2CN.0 ; TIMER 2 EXTERNAL CLOCK SELECT                         
+  00CA          +1   184     TR2      BIT   TMR2CN.2 ; TIMER 2 ON/OFF CONTROL                                
+  00CB          +1   185     T2SPLIT  BIT   TMR2CN.3 ; TIMER 2 SPLIT MODE ENABLE                             
+  00CD          +1   186     TF2LEN   BIT   TMR2CN.5 ; TIMER 2 LOW BYTE INTERRUPT ENABLE                     
+  00CE          +1   187     TF2L     BIT   TMR2CN.6 ; TIMER 2 LOW BYTE OVERFLOW FLAG                        
+  00CF          +1   188     TF2H     BIT   TMR2CN.7 ; TIMER 2 HIGH BYTE OVERFLOW FLAG                       
+                +1   189     
+                +1   190     ; PSW 0xD0 
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     4
+
+  00D0          +1   191     P        BIT   PSW.0    ; ACCUMULATOR PARITY FLAG                               
+  00D1          +1   192     F1       BIT   PSW.1    ; USER FLAG 1                                           
+  00D2          +1   193     OV       BIT   PSW.2    ; OVERFLOW FLAG                                         
+  00D3          +1   194     RS0      BIT   PSW.3    ; REGISTER BANK SELECT 0                                
+  00D4          +1   195     RS1      BIT   PSW.4    ; REGISTER BANK SELECT 1                                
+  00D5          +1   196     F0       BIT   PSW.5    ; USER FLAG 0                                           
+  00D6          +1   197     AC       BIT   PSW.6    ; AUXILIARY CARRY FLAG                                  
+  00D7          +1   198     CY       BIT   PSW.7    ; CARRY FLAG                                            
+                +1   199     
+                +1   200     ; PCA0CN 0xD8H 
+  00D8          +1   201     CCF0     BIT   PCA0CN.0 ; PCA0 MODULE 0 CAPTURE/COMPARE FLAG                    
+  00D9          +1   202     CCF1     BIT   PCA0CN.1 ; PCA0 MODULE 1 CAPTURE/COMPARE FLAG                    
+  00DA          +1   203     CCF2     BIT   PCA0CN.2 ; PCA0 MODULE 2 CAPTURE/COMPARE FLAG                    
+  00DB          +1   204     CCF3     BIT   PCA0CN.3 ; PCA0 MODULE 3 CAPTURE/COMPARE FLAG                    
+  00DC          +1   205     CCF4     BIT   PCA0CN.4 ; PCA0 MODULE 4 CAPTURE/COMPARE FLAG                    
+  00DE          +1   206     CR       BIT   PCA0CN.6 ; PCA0 COUNTER RUN CONTROL                              
+  00DF          +1   207     CF       BIT   PCA0CN.7 ; PCA0 COUNTER OVERFLOW FLAG                            
+                +1   208     
+                +1   209     ; ADC0CN 0xE8H 
+  00E8          +1   210     AD0CM0   BIT   ADC0CN.0 ; ADC0 CONVERSION MODE SELECT 0                         
+  00E9          +1   211     AD0CM1   BIT   ADC0CN.1 ; ADC0 CONVERSION MODE SELECT 1                         
+  00EA          +1   212     AD0CM2   BIT   ADC0CN.2 ; ADC0 CONVERSION MODE SELECT 2                         
+  00EB          +1   213     AD0WINT  BIT   ADC0CN.3 ; ADC0 WINDOW COMPARE INTERRUPT FLAG                    
+  00EC          +1   214     AD0BUSY  BIT   ADC0CN.4 ; ADC0 BUSY FLAG                                        
+  00ED          +1   215     AD0INT   BIT   ADC0CN.5 ; ADC0 CONVERISION COMPLETE INTERRUPT FLAG              
+  00EE          +1   216     AD0TM    BIT   ADC0CN.6 ; ADC0 TRACK MODE                                       
+  00EF          +1   217     AD0EN    BIT   ADC0CN.7 ; ADC0 ENABLE                                           
+                +1   218     
+                +1   219     ; SPI0CN 0xF8H 
+  00FF          +1   220     SPIF     BIT   SPI0CN.7 ; SPI 0 INTERRUPT FLAG                                  
+  00FE          +1   221     WCOL     BIT   SPI0CN.6 ; SPI 0 WRITE COLLISION FLAG                            
+  00FD          +1   222     MODF     BIT   SPI0CN.5 ; SPI 0 MODE FAULT FLAG                                 
+  00FC          +1   223     RXOVRN   BIT   SPI0CN.4 ; SPI 0 RX OVERRUN FLAG                                 
+  00FB          +1   224     NSSMD1   BIT   SPI0CN.3 ; SPI 0 SLAVE SELECT MODE 1                             
+  00FA          +1   225     NSSMD0   BIT   SPI0CN.2 ; SPI 0 SLAVE SELECT MODE 0                             
+  00F9          +1   226     TXBMT    BIT   SPI0CN.1 ; SPI 0 TRANSMIT BUFFER EMPTY                           
+  00F8          +1   227     SPIEN    BIT   SPI0CN.0 ; SPI 0 SPI ENABLE                                      
+                     228     
+                     229             
+0000                 230                       ORG   0000H
+                     231     
+0000 020523          232               LJMP  MAIN  
+                     233     
+                     234     
+                     235     
+                     236     ;--------T0¶¨Ê±Æ÷µÄÖÐ¶ÏÈë¿Ú---------
+                     237     ;Ã¿¸ô1ms½øÈëÖÐ¶Ï£¬¶ÔÊÂë¹ÜÑ­»·Ñ¡Í¨
+000B                 238               ORG   000BH            ;--
+                     239     
+                     240     
+000B 022566          241               LJMP  display                  ;--
+                     242     ;----------------------------------- 
+                     243     
+                     244     ;--------T1¶¨Ê±Æ÷µÄÖÐ¶ÏÈë¿Ú---------
+                     245     ;½øÈëÖÐ¶Ï£¬¼ì²âÉùÒô
+                     246     ;Ã¿0.5ms½øÈëÒ»´ÎÖÐ¶Ï
+001B                 247               ORG   001BH            ;--
+                     248     
+001B 0200EB          249                       ljmp T1J                               ;--Ìøµ½¶¨Ê±ÖÐ¶Ï1´¦Àí³ÌÐò
+                     250                                     
+                     251     ;----------------------------------- 
+                     252     
+                     253     
+                     254     ;--------T2¶¨Ê±Æ÷µÄÖÐ¶ÏÈë¿Ú---------
+                     255     ;¼ÆÊ±ÖÐ¶Ï£¬¸ù¾Ý²»Í¬µÄÄ£Ê½£¬Ìá¹©²»Í¬µÄÑÓÊ±
+002B                 256               ORG   002BH            ;--
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     5
+
+002B C2CF            257                       CLR  TF2H                              ;Çå³ÖÐ¶Ï±êÖ¾Î»
+                     258     
+002D 02008C          259                       LJMP  T2INTU                   ;--Ìøµ½¶¨Ê±ÖÐ¶Ï2´¦Àí³ÌÐò
+                     260     ;----------------------------------
+                     261     
+                     262     ;--------T3¶¨Ê±Æ÷µÄÖÐ¶ÏÈë¿Ú---------
+                     263     ;Ã¿¸ô0.25s½øÈëÒ»´ÎÖÐ¶Ï
+0073                 264               ORG   0073H            ;--
+0073 53917F          265                       anl  91H,#7FH                  ;Çå³ÖÐ¶Ï±êÖ¾Î»
+0076 8521DA          266                       MOV PCA0CPM0,21H               ;½«21HµÄÖµ¸³¸øPCAOCPM0
+0079 02007C          267                       LJMP  T3CHULI                  ;--Ìøµ½¶¨Ê±ÖÐ¶Ï3´¦Àí³ÌÐò
+                     268     ;----------------------------------
+                     269     
+                     270     
+                     271     
+                     272     ;----------------T3¶¨Ê±Æ÷ÖÐ¶Ï³ÌÐò-----
+007C 20A208          273     T3CHULI: JB P2.2,light                   ;ÅÐ¶ÏÊÇ·ñÓÐ¹â
+007F D201            274                      setb 01H                                ;¹â±êÖ¾Î»ÖÃ1
+                     275     
+0081 75441E          276                      mov 44H,#30                     ;ÑÓÊ±¼ÆÊÆ÷ÖÃ30
+0084 C2CA            277                      CLR TR2                                 ;¹Ø±Õ¼ÆÊÆ÷2
+0086 32              278                      RETI
+0087 C201            279     LIGHT:   CLR 01H                                 ;ÇåÁã¹â±êÖ¾Î»
+0089 D2CA            280                      SETB TR2                                ;¿ªÆô¼ÆÊÆ÷2
+008B 32              281                      RETI             
+                     282     ;--------------------------------------
+                     283     
+                     284     
+                     285     ;----------------T2¶¨Ê±Æ÷ÖÐ¶Ï³ÌÐò(100ms)-----
+008C                 286     T2INTU:
+008C 201006          287                     JB 10H,T2L0                               ;Ä£Ê½0ºÍ1¶ÔÓ¦µÄ¼ÆÊÑÓÊ±³ÌÐò
+008F 201103          288                     JB 11H,T2L0
+0092 201203          289                     JB 12H,T2L2                               ;Ä£Ê½2¶ÔÓ¦µÄ¼ÆÊÑÓÊ±³ÌÐò
+0095 02009B          290     T2L0:   ljmp t2l0p
+0098 0200A5          291     T2L2:   ljmp t2l2p
+                     292     
+                     293     
+                     294     
+                     295     ;--------;Ä£Ê½0ºÍ1¶ÔÓ¦µÄ¼ÆÊÑÓÊ±³ÌÐò-----------
+                     296     ;44H30´Î½øÈëT2£¬¼´3ÃëÄÚ¶¼ÓÐ¹â£¬Ôò¹Ø±ÕµÆ¹â------
+009B D54406          297     t2l0p:  DJNZ 44h,rt2l0                                  ;======
+009E C20E            298                     clr 0EH                                                 ;======
+00A0 75441E          299                     mov 44H,#30                                             ;======
+00A3 32              300                     reti                                                    ;======
+00A4                 301     rt2l0:                                                                  ;======
+00A4 32              302                     RETI                                                    ;======
+                     303     ;----------------------------------------======
+                     304     
+                     305     
+                     306     ;--------;Ä£Ê½2¶ÔÓ¦µÄ¼ÆÊÑÓÊ±³ÌÐò-----------
+                     307     ;45H100´Î½øÈëT2£¬¼´ÑÓÊ±10sºó¹Ø±ÕµÆ¹â------
+00A5                 308     t2l2p:                                                             ;======
+00A5 D54509          309                     DJNZ 45h,rt2l2                             ;======
+00A8 C20E            310                     clr 0EH                                            ;======
+00AA 8521DA          311                     MOV PCA0CPM0,21H                           ;======
+00AD 75441E          312                     mov 44H,#30                                        ;======
+00B0 32              313                     reti                                               ;======
+00B1                 314     rt2l2:                                                             ;======
+00B1 32              315                     RETI                                               ;======
+                     316     ;--------------------------------------=======
+                     317     
+                     318     
+                     319     
+                     320     
+                     321     
+                     322     
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     6
+
+                     323     
+                     324     
+                     325     ;--------------------------------------------- ----------
+00B2 D2D3            326     NOJIANCE:setb psw.3                      ;²»¼ì²âÉùÒô³ÌÐò,1sºóÈ¥³Õâ¸ö×´Ì¬
+00B4 D2D4            327                      setb psw.4               
+00B6 0B              328                      INC R3
+00B7 BB0001          329                      CJNE R3,#0,T11
+00BA 0A              330                      INC R2
+00BB BA0709          331     T11:     cjne r2,#007H,T1R
+00BE BBD006          332                      cjne r3,#0D0H,T1R
+00C1 7B00            333                      MOV R3,#00H
+00C3 7A00            334                      MOV R2,#0
+00C5 D203            335                      SETB 03H
+00C7 C2D3            336     T1R:     CLR PSW.3
+00C9 C2D4            337                      clr psw.4
+00CB C204            338                      CLR 04H
+00CD C205            339                      CLR 05H
+00CF 32              340                      RETI
+                     341     ;----------------------------------------------------
+                     342     
+                     343     
+                     344     
+                     345     ;------Ïû³Ëµ»°Éù³ÌÐò---------------------------=
+                     346     ;-----Á½ÃëÄÚ¾ùÃ»ÓÐÉùÒô£¬²ÅÏû³ÓÐÔëÉù×´Ì¬-----
+00D0 D2D3            347     XIAOCHUNV:setb psw.3
+00D2 D2D4            348                       setb psw.4
+00D4 0E              349                       INC R6
+00D5 BE0001          350                       CJNE R6,#00,TR7
+00D8 0F              351                       INC R7
+00D9 BF0FEB          352     TR7:      CJNE R7,#00FH,T1R
+00DC BEA0E8          353                       CJNE R6,#0A0H,T1R
+00DF 7F00            354                       MOV R7,#0
+00E1 C206            355                       CLR 06H
+00E3 7800            356                       MOV R0,#0
+00E5 7C00            357                       MOV R4,#0
+00E7 C205            358                       CLR 05H
+00E9 80DC            359                       sjmp t1r
+                     360     ;---------------------------------------------==
+                     361     
+                     362     
+                     363     ;---------------------------------------------------------
+                     364     ;--------------T1¶¨Ê±Æ÷ÖÐ¶Ï³ÌÐò-------------------------
+                     365     ;---------------ÉùÒô¼ì²â³ÌÐò----------------------------
+                     366     ;-----------------------------------------------------------
+                     367     
+00EB 3003C4          368     t1j:     JNB 03H,NOJIANCE          ;ÈôÓÐ°´¼ü£¬1ÃëÄÚ²»¼ì²âÉùÒô
+00EE D2D3            369                      SETB PSW.3                        ;·ñÔò¿ªÊ¼¼ì²â£¬±ä»»¹¤×÷¼Ä´æÆ÷×é
+00F0 C2D4            370                      CLR PSW.4
+00F2 0C              371                      INC R4                            ;R4+1
+00F3 20A174          372     JIANCE:  JB P2.1,havevoice         ;¼ì²âÊÇ·ñÓÐÉùÒô
+00F6 20A171          373                      JB P2.1,havevoice
+00F9 20A16E          374                      JB P2.1,havevoice
+00FC 20A16B          375                      JB P2.1,havevoice
+00FF 20A168          376                      JB P2.1,havevoice
+0102 20A165          377                      JB P2.1,havevoice
+0105 20A162          378                      JB P2.1,havevoice
+0108 20A15F          379                      JB P2.1,havevoice
+010B 20A15C          380                      JB P2.1,havevoice
+                     381     
+                     382     
+010E 2006BF          383     NOVOICE: JB 06H,XIAOCHUNV                ;Èô06HÎª1£¬ÔòÈÏÎªÔëÉù±êÖ¾Î»Î´Ïû³£¬½øÈëÔëÉù³ÌÐò
+0111 30052A          384                      JnB 05h,nov3                    ;ÈôÒ»Ö±Ã»ÉùÒô£¬¼´ÉùÒôÎ»05HÎª0£¬ÔòÖ±½ÓÌø³ö
+0114 C2D4            385                      CLR PSW.4                               ;Ñ¡¶¨¹¤×÷¼Ä´æÆ÷1
+0116 D2D3            386                      SETB PSW.3                              
+0118 30040D          387                      JNB 04H,T3R2                    ;ÈôÉùÒôÓÐÐ§£¬R2£¬R3Ôò¼ÆÊ£¬µ±1.2ÃëÄÚ¶¼Ã»ÓÐÉ
+                             ùÒô  ÔòÉùÒôÓÐÐ§Êä³ö
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     7
+
+011B 0A              388                      INC R2
+011C BA0001          389                      CJNE R2,#0,T2R
+011F 0B              390                      INC R3
+0120 BB0916          391     T2R:     CJNE R3,#09H,NOV1
+0123 BA6013          392                      cjne R2,#060H,NOV1
+0126 801D            393                      SJMP OUTEN
+0128 BCC802          394     T3R2:    CJNE R4,#200,nov2               
+012B 400C            395                      JC NOV1
+012D 7800            396     nov2:    mov r0,#0
+012F 7C00            397                      mov r4,#0
+0131 C204            398                      CLR 04H
+0133 C205            399                      CLR 05H
+0135 7A00            400                      mov R2,#0
+0137 7B00            401                      mov r3,#0
+0139 C2D3            402     NOV1:    CLR PSW.3                                 ;»¹Ô­¹¤×÷¼Ä´æÆ÷0
+013B C2D4            403                      CLR PSW.4
+013D 32              404                      RETI
+013E 7C00            405     NOV3:    mov r4,#0
+0140 C2D3            406                       CLR PSW.3                                ;»¹Ô­¹¤×÷¼Ä´æÆ÷0
+0142 C2D4            407                      CLR PSW.4
+0144 32              408                      RETI
+                     409     
+                     410     ;-----------Éù¿ØÓÐÐ§£¬¶ÔLED½øÐÐ¿ØÖÆ--------
+0145 7B00            411     OUTEN:    MOV R3,#0
+0147 7A00            412                       MOV R2,#0
+0149 7C00            413                       mov R4,#0
+014B 7800            414                       MOV R0,#0
+014D C205            415                       CLR 05H
+014F C204            416                       CLR 04H
+0151 200E0C          417                       JB 0EH,off
+0154 300104          418                       JNB 01H,T3R0
+0157 D20E            419                       SETB 0EH
+0159 D200            420                       SETB 00H
+015B C2D3            421     T3R0:     CLR PSW.3
+015D C2D4            422                       CLR PSW.4
+015F 32              423                       RETI
+0160 75DA02          424     off:      MOV PCA0CPM0,#02H                ;¹Ø±Õ
+0163 C20E            425                       CLR 0EH
+0165 C200            426                       CLR 00H
+0167 C2D3            427                       CLR PSW.3
+0169 32              428                       RETI
+                     429     ;-----------------------------------------
+                     430     
+                     431     
+016A 20061F          432     havevoice:JB 06H,XIAOCHUV
+016D D205            433                       setb 05H
+016F D204            434                       SETB 04H
+0171 C2D4            435                       CLR PSW.4                              ;Ñ¡¶¨¹¤×÷¼Ä´æÆ÷1
+0173 D2D3            436                       SETB PSW.3               
+0175 BCC800          437                       CJNE R4,#200,T3C1       ;     ÈôR4´óÓÚ200Ê±»¹ÓÐÉùÒô£¬ÔòÈÏÎªÉùÒôÎÞÐ§
+0178 5005            438     T3C1:     JNC NOV                         ;R4´óÓÚ200Ê±£¬Ìøµ½NOV
+017A C2D3            439                       CLR PSW.3                       ;·µ»ØÖÐ¶Î
+017C C2D4            440                       CLR PSW.4
+017E 32              441                       RETI
+017F D206            442     NOV:      SETB 06H                ;ÓÐÉùÒô´óÓÚ0.1sÓÖÓÐÉùÒô£¬ÉùÒôÎÞÐ§ ,ÐèÒªÁ½ÃëÄÚÎÞÉùÒô·½¿ÉÏû
+                             ³06H
+0181 C204            443                       CLR 04H                 ;ÓÐÉùÒôµÄ0.1sÄÚÎÞÉùÒô£¬ÉùÒôÎÞÐ§,ÇåÁãÉùÒôÓÐÐ§Î»
+0183 7800            444                       MOV R0,#0
+0185 7900            445                       MOV R1,#0
+0187 7C00            446                       MOV R4,#0
+0189 C2D3            447                       CLR PSW.3
+018B 32              448                       RETI
+                     449     
+                     450     ;------------ÓÐËµ»°ÉùÒôºóÁ½ÃëÄÚÈôÓÐÉùÒô£¬ÔòÈÏÎªËµ»°ÈÔÈ»½øÐÐ---------
+018C D2D3            451     XIAOCHUV: SETB PSW.3
+018E D2D4            452                       SETB PSW.4
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     8
+
+0190 7F00            453                       MOV R7,#00H      ;Ïû³ÉùÒô
+0192 7E00            454                       mov r6,#0
+0194 C2D3            455                       CLR PSW.3
+0196 C2D4            456                       CLR PSW.4
+0198 32              457                       RETI
+                     458     ;-------------------------------------------------------------------------
+                     459     
+                     460     
+                     461     
+                     462     ;-----------------------------------
+0500                 463                       ORG 0500H
+                     464     ;---------------Ä£Ê½0¼üÅÌ³¤Ìø×ªÖÐ×ªµØÖ·--------------
+0500 02060F          465     KEY01:LJMP KEY1
+0503 02065C          466     KEY02:LJMP KEY2
+0506 0206A8          467     KEY03:LJMP KEY3
+0509 0206D0          468     KEY04:LJMP KEY4
+                     469     ;----------Ä£Ê½0¼üÅÌ³¤Ìø×ªÖÐ×ªµØÖ·---------               
+050C 122550          470     JUDGE:    LCALL DL1                             ;ÑÓÊ±È¥¶¶
+050F 30A4F7          471                       JNB P2.4,KEY04                ;ÈôP2.4Îª0£¬ÔòËµÃ÷KI0ÁÐÓÐ¼ü°´Èë£¬ÌøÖÁÁÐ1ÅÐ¶
+                             ÏµÄÖÐ×ª³ÌÐò
+0512 30A5F1          472                       JNB P2.5,KEY03            ;ÈôP2.5Îª0£¬ÔòËµÃ÷KI1ÁÐÓÐ¼ü°´Èë£¬ÌøÖÁÁÐ2ÅÐ¶ÏµÄÖ
+                             Ð×ª³ÌÐò
+0515 30A6EB          473                       JNB P2.6,KEY02            ;ÈôP2.6Îª0£¬ÔòËµÃ÷KI2ÁÐÓÐ¼ü°´Èë£¬ÌøÖÁÁÐ3ÅÐ¶ÏµÄÖ
+                             Ð×ª³ÌÐò
+0518 30A7E5          474                       JNB P2.7,KEY01            ;ÈôP2.6Îª0£¬ÔòËµÃ÷KI2ÁÐÓÐ¼ü°´Èë£¬ÌøÖÁÁÐ3ÅÐ¶ÏµÄÖ
+                             Ð×ª³ÌÐò
+051B 301002          475                       JnB 10h,jnol1
+051E D28E            476                       setb tr1      
+0520 020568          477     jnol1:    LJMP LOOP                             ;Ìø»ØÖ÷³ÌÐò
+                     478     ;-------------------------------------
+                     479     
+                     480     ;-----------------------Ö÷³ÌÐò--------------------------
+0523 758160          481     MAIN:     MOV SP,#60H                     ;¶ÑÕ»Ö¸Õë¸³Öµ
+                     482                       
+0526 120000   F      483                      LCALL  Init_Device       ;³¤µ÷ÓÃÅäÖÃÎÄ¼þ
+                     484                       
+                     485     
+                     486        ;--------------¸³³õÖµ--------------------
+0529 7A18            487                       MOV R2,#24                      ;R2ÖÃÊ
+052B 7908            488                       MOV R1,#08H                     ;´æ´¢¿Õ¼äÊ×µØÖ·24H
+052D 7700            489     CLEAR:    MOV @R1,#00H                    ;ÇåÁã
+052F 09              490                       INC R1                                  ;R1=R1+1
+0530 DAFB            491                       DJNZ R2,CLEAR                   ;Ñ­»·ÇåÁã¹¤×÷¼Ä´æÆ÷
+0532 7800            492                       MOV R0,#00H           
+0534 7B00            493                       MOV R3,#00H
+0536 754000          494                       MOV 40H,#00H          
+0539 754100          495                       MOV 41H,#00H
+053C 754200          496                       MOV 42H,#00H
+053F 754300          497                       MOV 43H,#00H
+0542 7A00            498                       MOV R2,#00H
+                     499                      
+0544 758C00          500                       MOV TH0,#00H          
+0547 758C00          501                       MOV TH0,#00H
+054A 7D00            502                       MOV R5,#00H           
+054C D28C            503                       SETB TR0                                ;¿ªÆô¶¨Ê±Æ÷0
+054E 439104          504                       ORL  91H,#04H                    ;¿ªÆô¶¨Ê±Æ÷3
+0551 7520FF          505                       MOV 20H,#0FFH
+0554 D202            506                       SETB 02H                                ;ÏÔÊ¾Æ÷±êÖ¾Î»ÖÃ1
+0556 C204            507                       CLR 04H                                 ;ÇåÁãÉùÒôÓÐÐ§Î»
+0558 C206            508                       clr 06H                                 ;ÇåÁãÔëÉù±êÖ¾Î»
+055A C205            509                       CLR 05H                                 ;ÇåÁãÉùÒô±êÖ¾Î»
+055C 752142          510                       MOV 21H,#42H                    ;PCA0µÄµÈÐ§µØÖ·¸³Öµ
+055F 752200          511                       MOV 22H,#00H
+0562 752300          512                       MOV 23H,#00H
+0565 75FCFF          513                       MOV PCA0CPH0,#0FFH      ;Ä¬ÈÏÕ¼¿Õ±È×îÐ¡
+                     514     
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE     9
+
+                     515     ;------Ä£Ê½Ñ¡Ôñ³ÌÐò
+0568                 516     LOOP:    ;-----Ä£Ê½0----
+                     517      
+0568 AF43            518                       mov R7,43h
+056A BF000E          519                       CJNE R7,#00H,L1
+056D 752201          520                       MOV 22H,#01H           ;Ä£Ê½0±êÖ¾Î»ÖÃ1
+0570 752300          521                       MOV 23H,#00H            
+0573 439104          522                       ORL  91H,#04H          ;¿ªÆô¹â¿ØÉù¿Ø
+0576 D28E            523                       SETB TR1
+0578 0205E2          524                       LJMP LOOP0
+                     525     
+057B BF0110          526     L1:               CJNE R7,#01H,L2
+057E 752202          527                       MOV 22H,#02H           ;Ä£Ê½1±êÖ¾Î»ÖÃ1
+0581 752300          528                       MOV 23H,#00H
+0584 C28E            529                       CLR TR1
+0586 439104          530                       ORL  91H,#04H          ;¿ªÆô¹â¿Ø¹Ø±ÕÉù¿Ø
+0589 D20E            531                       SETB 0EH
+058B 0205E2          532                       LJMP LOOP0
+                     533     
+058E BF0213          534     L2:               CJNE R7,#02H,L3
+0591 752204          535                       MOV 22H,#04H                  ;Ä£Ê½2±êÖ¾Î»ÖÃ1
+0594 752300          536                       MOV 23H,#00H
+0597 C28E            537                       clr tr1                               ;¹Ø±Õ¹â¿ØÉù¿Ø
+0599 75DA02          538                       MOV PCA0CPM0,#02H
+059C C2CA            539                       clr tr2
+059E 5391FB          540                       ANL  91H,#0FBH
+05A1 02070E          541                       LJMP LOOP2
+                     542      ;-------Ä£Ê½À©³ä------
+05A4 BF030B          543     L3:               CJNE R7,#03H,L4
+05A7 752200          544                       MOV 22H,#00H
+05AA 752300          545                       MOV 23H,#00H
+05AD C28E            546                       clr TR1
+05AF 02070E          547                       LJMP LOOP2
+05B2 BF0409          548     L4:               CJNE R7,#04H,L5
+05B5 752200          549                       MOV 22H,#00H
+05B8 752300          550                       MOV 23H,#00H
+05BB 0205FC          551                       LJMP LOOP1
+05BE BF0509          552     L5:               CJNE R7,#05H,L6
+05C1 752200          553                       MOV 22H,#00H
+05C4 752300          554                       MOV 23H,#00H
+05C7 0205FC          555                       LJMP LOOP1
+05CA BF0609          556     L6:               CJNE R7,#06H,L7
+05CD 752200          557                       MOV 22H,#00H
+05D0 752300          558                       MOV 23H,#00H
+05D3 0205FC          559                       LJMP LOOP1
+05D6 BF078F          560     L7:               CJNE R7,#07H,LOOP
+05D9 752200          561                       MOV 22H,#00H
+05DC 752300          562                       MOV 23H,#00H
+05DF 0205FC          563                       LJMP LOOP1
+                     564     
+                     565     
+                     566     ;-----------------Ä£Ê½0--------
+05E2                 567     LOOP0:    
+05E2 30A70C          568                       JNB P2.7,JUDGEL0       ;ÈôP2.7Îª0£¬ÔòËµÃ÷K4¼ü°´Èë£¬ÌøÖÁ4ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+05E5 30A409          569                       JNB P2.4,JUDGEL0       ;ÈôP2.4Îª0£¬ÔòËµÃ÷K1¼ü°´Èë£¬ÌøÖÁ1ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+05E8 30A506          570                       JNB P2.5,JUDGEL0       ;ÈôP2.5Îª0£¬ÔòËµÃ÷K2¼ü°´Èë£¬ÌøÖÁ2ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+05EB 30A603          571                       JNB P2.6,JUDGEL0       ;ÈôP2.6Îª0£¬ÔòËµÃ÷K3¼ü°´Èë£¬ÌøÖÁ3ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+05EE 0205E2          572                       LJMP LOOP0
+05F1 C28E            573     JUDGEL0:  clr tr1
+05F3 02050C          574               LJMP JUDGE
+                     575     
+                     576     
+                     577     
+                     578     
+05F6                 579     JUDGEL1:  
+05F6 53917F          580                       anl  91H,#7FH
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    10
+
+05F9 02050C          581                       LJMP JUDGE
+05FC 30A7F7          582     LOOP1:    JNB P2.7,JUDGEL1       ;ÈôP2.7Îª0£¬ÔòËµÃ÷K4¼ü°´Èë£¬ÌøÖÁÁÐ4ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+05FF 30A4F4          583                       JNB P2.4,JUDGEL1       ;ÈôP2.4Îª0£¬ÔòËµÃ÷K1¼ü°´Èë£¬ÌøÖÁÁÐ1ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0602 30A5F1          584                       JNB P2.5,JUDGEL1       ;ÈôP2.5Îª0£¬ÔòËµÃ÷K2¼ü°´Èë£¬ÌøÖÁÁÐ2ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0605 30A6EE          585                       JNB P2.6,JUDGEL1       ;ÈôP2.6Îª0£¬ÔòËµÃ÷K3¼ü°´Èë£¬ÌøÖÁÁÐ3ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0608 020568          586                       LJMP LOOP
+                     587     
+                     588     
+                     589     ;----------------°´¼ü-----------------
+                     590     
+                     591     
+                     592     ;-------------ÁÁ¶ÈÔö¼Ó¼ü----------------------------
+060B D20E            593     L1G1:      SETB 0EH
+060D 8005            594                        SJMP KEY1L1
+060F C203            595     KEY1:      CLR 03H                              ;¹Ø±Õ¼ì²âÉùÒô±êÖ¾Î»     
+0611 2011F7          596                        JB 11H,L1G1                  ;ÎªÁË±£³ÖµÆÁÁÒ»ÖÂ
+0614 BB9902          597     KEY1L1: CJNE R3,#99H,k1
+0617 8009            598                        SJMP W1
+0619 EB              599     k1:                MOV A, R3
+061A 00              600                        NOP
+061B 2401            601                        ADD A,#01H      ;A=A+1
+061D 00              602                        NOP
+061E D4              603                        DA A             ;µ÷Õû³ÉBCDÂë
+061F 00              604                        NOP
+0620 FB              605                        MOV R3,A                     ;A¸³¸øR3£¬ÓÃÓÚÏÔÊ¾ÁÁ¶ÈµÈ¼¶
+0621 00              606                        NOP
+0622 EB              607     W1:                MOV A,R3
+0623 00              608                        NOP
+0624 902800          609                        MOV DPTR,#TABLE              ;²é±í£¬¸Ä±äÁÁ¶ÈµÈ¼¶
+0627 00              610                        NOP
+0628 93              611                        MOVC A,@A+DPTR       
+0629 00              612                        NOP
+062A F5FC            613                        MOV PCA0CPH0,A  
+062C 00              614                        NOP
+062D 8521DA          615                        MOV PCA0CPM0,21H 
+0630 BA5F0D          616                        CJNE R2,#5FH,RE1
+0633 20A710          617     W3:                JB P2.7,W2
+0636 BA5F07          618                        CJNE R2,#5FH,RE1              ;Èô³¤°´£¬ÔòÔÙ´Î½øÈë°´¼ü
+0639 7C01            619                        MOV R4,#01H
+063B 12255B          620                        LCALL DL0
+063E 80CF            621                        SJMP KEY1
+                     622     
+                     623     
+0640 122550          624     RE1:       LCALL DL1               ;ÑÓÊ±È¥¶¶£¬¼ì²â°´¼üÊÇ·ñËÉ¿ª
+0643 0A              625                        INC R2
+0644 80ED            626                        SJMP W3             ;ÈôP2.7ÈÓÎª0£¬ËµÃ÷°´¼üÎ´ËÉ¿ª£¬ÖØÐÂ¼ì²â
+                     627     
+0646 7A00            628     W2:                MOV R2,#00H                  ;Èô·ÇÄ£Ê½1£¬Ôò²»¶ÔT1¶¨Ê±Æ÷½øÐÐ´¦Àí
+0648 C203            629                        CLR 03H
+064A 201208          630                        jB 12H,K1L2
+064D 301002          631                       JnB 10h,K1nol1
+0650 D28E            632                       setb tr1      
+0652 0205E2          633     K1nol1:   LJMP LOOP0               ;·µ»ØÖ÷³ÌÐò
+0655 02070E          634     K1L2:     LJMP LOOP2
+                     635     
+                     636     
+                     637     
+                     638      ;-------ÁÁ¶È¼õÉÙ¼ü-------
+0658 C20E            639     L1G:       CLR 0EH
+065A 8013            640                        SJMP w12
+065C C203            641     KEY2:      CLR 03H                         ;¹Ø±Õ¼ì²âÉùÒô±êÖ¾Î»
+065E BB0005          642                             CJNE R3,#00H,k2    ;ÎªÁË±£³ÖµÆÁÁÒ»ÖÂ
+0661 2011F4          643                             JB 11H,L1G
+0664 8009            644                        SJMP w12
+0666 EB              645     k2:                MOV A, R3
+0667 00              646                        NOP
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    11
+
+0668 2499            647                        ADD A,#99H      ;A=A+1       
+066A 00              648                        NOP
+066B D4              649                        DA A             ;µ÷Õû³ÉBCDÂë
+066C 00              650                        NOP
+066D FB              651                        MOV R3,A                      ;A¸³¸øR3£¬ÓÃÓÚÏÔÊ¾ÁÁ¶ÈµÈ¼¶
+066E 00              652                        NOP
+066F EB              653     W12:       MOV A,R3
+0670 00              654                        NOP
+0671 902800          655                        MOV DPTR,#TABLE         ;²é±í£¬¸Ä±äÁÁ¶ÈµÈ¼¶
+0674 00              656                        NOP
+0675 93              657                        MOVC A,@A+DPTR
+0676 00              658                        NOP  
+0677 F5FC            659                        MOV PCA0CPH0,A
+0679 8521DA          660                        MOV PCA0CPM0,21H
+067C 00              661                        NOP
+                     662     
+                     663     
+067D BA5F0D          664                        CJNE R2,#5FH,RE12     ;Èô³¤°´£¬ÔòÔÙ´Î½øÈë°´¼ü
+0680 20A610          665     W32:       JB P2.6,W22
+                     666     
+0683 BA5F07          667                        CJNE R2,#5FH,RE12      ;Èô³¤°´£¬ÔòÔÙ´Î½øÈë°´¼ü
+0686 7C01            668                        MOV R4,#01H
+0688 12255B          669                        LCALL DL0
+068B 80CF            670                        SJMP KEY2
+                     671     
+                     672     
+068D 122550          673     RE12:      LCALL DL1               ;ÑÓÊ±È¥¶¶£¬¼ì²â°´¼üÊÇ·ñËÉ¿ª
+0690 0A              674                        INC R2
+0691 80ED            675                        SJMP W32             ;ÈôP2.7ÈÓÎª0£¬ËµÃ÷°´¼üÎ´ËÉ¿ª£¬ÖØÐÂ¼ì²â
+0693 7A00            676     W22:       MOV R2,#00H
+0695 122550          677                        LCALL DL1
+0698 20120A          678                      jB 12H,K2L2
+069B 301004          679                       JnB 10h,K2nol1           ;Èô·ÇÄ£Ê½1£¬Ôò²»¶ÔT1¶¨Ê±Æ÷½øÐÐ´¦Àí
+069E D28E            680                       setb tr1      
+06A0 C203            681                        CLR 03H
+06A2 0205E2          682     K2nol1:   LJMP LOOP0               ;·µ»ØÖ÷³ÌÐò
+06A5 02070E          683     K2L2:      LJMP LOOP2
+                     684     
+                     685     
+                     686     
+                     687     ;-------------¿ªÆô»ò¹Ø±ÕÊÂë¹Ü¼ü---------------------
+06A8 C203            688     kEY3:           CLR 03H
+06AA 300209          689                             JNB 02H,xianshi
+06AD C28C            690                        CLR TR0
+06AF C202            691                        CLR 02H
+06B1 75900F          692                        MOV P1,#0FH
+06B4 8004            693                        SJMP RE3
+06B6 D28C            694     XIANSHI:   SETB TR0
+06B8 D202            695                        SETB 02H
+                     696     
+06BA 122550          697     RE3:       LCALL DL1               ;ÑÓÊ±È¥¶¶£¬¼ì²â°´¼üÊÇ·ñËÉ¿ª
+                     698     
+06BD 30A5FA          699                        JNB P2.5,RE3            ;ÈôP2.5ÈÓÎª0£¬ËµÃ÷°´¼üÎ´ËÉ¿ª£¬ÖØÐÂ¼ì²â
+06C0 20120A          700                        JB 12H,K3L2
+06C3 301004          701                       JnB 10h,K3nol1                ;Èô·ÇÄ£Ê½1£¬Ôò²»¶ÔT1¶¨Ê±Æ÷½øÐÐ´¦Àí
+06C6 D28E            702                       setb tr1      
+06C8 C203            703                        CLR 03H
+06CA 0205E2          704     K3nol1:   LJMP LOOP0               ;·µ»ØÖ÷³ÌÐò
+06CD 02070E          705      K3L2:    LJMP LOOP2
+                     706      ;-------------Ä£Ê½ÇÐ»» ¼ü-----
+                     707     
+06D0 C203            708     KEY4:      CLR 03H
+06D2 0543            709                        INC 43H
+06D4 A843            710                        MOV R0,43h
+06D6 AF43            711                        MOV R7,43H
+06D8 BF0305          712                        CJNE R7,#3,re4
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    12
+
+06DB 754300          713                        MOV 43h,#0
+06DE A843            714                        MOV R0,43h
+06E0 122550          715     RE4:       LCALL DL1               ;ÑÓÊ±È¥¶¶£¬¼ì²â°´¼üÊÇ·ñËÉ¿ª
+06E3 30A4FA          716                        JNB P2.4,RE4            ;ÈôP2.5ÈÓÎª0£¬ËµÃ÷°´¼üÎ´ËÉ¿ª£¬ÖØÐÂ¼ì²â
+06E6 301004          717                       JnB 10h,K4nol1                ;Èô·ÇÄ£Ê½1£¬Ôò²»¶ÔT1¶¨Ê±Æ÷½øÐÐ´¦Àí
+06E9 D28E            718                       setb tr1      
+06EB C203            719                        CLR 03H
+06ED 020568          720     K4nol1:    LJMP LOOP               ;·µ»ØÖ÷³ÌÐò
+                     721     
+                     722     
+                     723     
+                     724     ;---------------Ä£Ê½2----------------------------
+                     725      ;ÌøÖÁÏàÓ¦µÄ°´¼ü³ÌÐò
+06F0 02060F          726     KEY01L2:LJMP KEY1
+06F3 02065C          727     KEY02L2:LJMP KEY2
+06F6 0206A8          728     KEY03L2:LJMP KEY3
+06F9 0206D0          729     KEY04L2:LJMP KEY4
+                     730     ;----------Ä£Ê½2¼üÅÌ³¤Ìø×ªÖÐ×ªµØÖ·---------               
+06FC 122550          731     JUDGEl2:    LCALL DL1                           ;ÑÓÊ±È¥¶¶
+06FF 30A4F7          732                       JNB P2.4,KEY04l2              ;ÈôP2.4Îª0£¬ÔòËµÃ÷K1¼ü°´Èë£¬ÌøÖÁ1ÅÐ¶ÏµÄÖÐ×ª
+                             ³ÌÐò
+0702 30A5F1          733                       JNB P2.5,KEY03L2          ;ÈôP2.5Îª0£¬ÔòËµÃ÷K2¼ü°´Èë£¬ÌøÖÁ2ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0705 30A6EB          734                       JNB P2.6,KEY02L2          ;ÈôP2.6Îª0£¬ÔòËµÃ÷K3¼ü°´Èë£¬ÌøÖÁ3ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0708 30A7E5          735                       JNB P2.7,KEY01L2          ;ÈôP2.6Îª0£¬ÔòËµÃ÷K4¼ü°´Èë£¬ÌøÖÁ4ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+                     736                             
+070B 02070E          737                       LJMP LOOP2                            ;Ìø»ØÖ÷³ÌÐò
+                     738     
+                     739     
+070E 20A10E          740     LOOP2:    JB P2.1,KONGZHI
+0711 30A7E8          741                       JNB P2.7,JUDGEL2       ;ÈôP2.7Îª0£¬ÔòËµÃ÷K4¼ü°´Èë£¬ÌøÖÁ4ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0714 30A4E5          742                       JNB P2.4,JUDGEL2       ;ÈôP2.4Îª0£¬ÔòËµÃ÷K1¼ü°´Èë£¬ÌøÖÁ1ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+0717 30A5E2          743                       JNB P2.5,JUDGEL2       ;ÈôP2.5Îª0£¬ÔòËµÃ÷K2¼ü°´Èë£¬ÌøÖÁ2ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+071A 30A6DF          744                       JNB P2.6,JUDGEL2       ;ÈôP2.6Îª0£¬ÔòËµÃ÷K3¼ü°´Èë£¬ÌøÖÁ3ÅÐ¶ÏµÄÖÐ×ª³ÌÐò
+071D 80EF            745                       sjmp loop2
+071F 20A2EC          746     KONGZHI:  JB  P2.2,LOOP2
+0722 75DA42          747                       MOV PCA0CPM0,#42H 
+0725 00              748                       NOP
+0726 D2CA            749                       SETB TR2
+0728 122550          750                       LCALL DL1
+072B 754564          751                       mov  45h,#100          
+072E 80DE            752                       sjmp loop2
+                     753     
+                     754     
+                     755     
+                     756     ;---------------ÑÓÊ±³ÌÐò----------------
+2550                 757                     ORG   2550H
+2550 7F10            758     DL1:    MOV   R7,  #10H
+2552 7EFF            759     DLA:     MOV   R6,  #0FFH
+2554 DEFE            760     DLB:    DJNZ  R6,  DLB
+2556 DFFA            761                     DJNZ  R7,  DLA
+2558 22              762                     RET
+                     763     
+2559 7C05            764     DL4:    MOV   R4,#05H
+255B 7FFF            765     DL0:    MOV   R7,  #0FFH
+255D 7EFF            766     DL:     MOV   R6,  #0FFH
+255F DEFE            767     DL6:    DJNZ  R6,  DL6          
+2561 DFFA            768                     DJNZ  R7,  DL
+2563 DCF6            769                     DJNZ  R4,DL0
+                     770     
+2565 22              771                     RET     
+                     772     
+                     773     ;-------------------------------------------------
+                     774     ;-------------ÏÔÊ¾ÆÁ¶¯Ì¬ÏÔÊ¾³ÌÐò------------------
+                     775     ;-------------------------------------------------
+2566 C3              776     display:        CLR    C                 ;ÇåÁãCÎ»
+2567 BD0202          777                             CJNE R5,#02H,X1  ;ÅÐ¶ÏR5Óë02µÄ´óÐ¡
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    13
+
+256A 8042            778                             SJMP display2    ;R5µÈÓÚ2£¬Ñ¡Í¨ÊÂë¹Ü2
+256C 5058            779     X1:                     JNC  display3    ;cy=0£¬±íÃ÷R5=3£¬Ñ¡Í¨ÊÂë¹Ü3
+256E BD0102          780                         CJNE R5,#01H,X0      ;R5Ð¡ÓÚ2£¬ÔÙÓë1½øÐÐ±È½Ï
+2571 801A            781                             SJMP display1    ;R5µÈÓÚ1£¬Ñ¡Í¨ÊÂë¹Ü1
+2573 8000            782     X0:                     SJMP display0    ;R5Ð¡ÓÚ1£¬Ñ¡Í¨ÊÂë¹Ü0
+                     783     
+                     784     
+                     785          ;----------ÊÂë¹Ü0ÏÔÊ¾Ä£Ê½µÍÎ»-----
+2575 7590FF          786     display0: MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+2578 7590FF          787                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+257B 7590FF          788                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+257E 00              789                       NOP
+257F 00              790                       NOP
+2580 00              791                       NOP
+2581 740F            792                       MOV A,#0FH             ;ÆÁ±ÎR0¸ßËÄÎ»
+2583 58              793                       ANL A,R0                       ;½«R0ÓëA½øÐÐÓë²Ù×÷£¬½«R0µÍËÄÎ»´æÖÁAÖÐ
+2584 C2E4            794                       CLR ACC.4                      ;P0.7,P0.6ÖÃÁã£¬Ñ¡Í¨ÊÂë¹Ü0
+2586 C2E5            795                       CLR ACC.5             
+2588 F590            796                       MOV P1,A                       ;½«²éµÃµÄÖµ¸³¸øP1£¬ÊÂë¹Ü0µÃµ½ÏÔÊ¾
+258A 7D01            797                       MOV R5,#1                      ;R5¸³1£¬ÏÂÒ»´ÎÖÐ¶Ïµ½À´£¬Ñ¡Í¨ÊÂë¹Ü1
+258C 32              798                       RETI                           ;¶¨Ê±Æ÷1ÖÐ¶Ï·µ»Ø
+                     799          ;--------------------------------------
+                     800     
+                     801          ;---------ÊÂë¹Ü1ÏÔÊ¾Ä£Ê½¸ßÎ»------
+258D 7590FF          802     display1: MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+2590 7590FF          803                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+2593 7590FF          804                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+2596 00              805                       NOP
+2597 00              806                       NOP
+2598 74F0            807                       MOV A,#0F0H            ;ÆÁ±ÎR0µÍËÄÎ»
+259A 58              808                       ANL A,R0                       ;½«R0ÓëA½øÐÐÓë²Ù×÷£¬½«R0¸ßËÄÎ»´æÖÁAÖÐ
+259B C4              809                       SWAP A                         ;½»»»AÖÐµÄ¸ßËÄÎ»ºÍµÍËÄÎ»
+259C B40006          810                       CJNE A,#00H,light_l
+259F 75900F          811                       MOV P1,#0fh
+25A2 7D02            812                       MOV R5,#2                      ;R5¸³0£¬ÏÂÒ»´ÎÖÐ¶Ïµ½À´£¬Ñ¡Í¨ÊÂë¹Ü0
+25A4 32              813                       RETI                           ;¶¨Ê±Æ÷1ÖÐ¶Ï·µ»Ø
+25A5 C2E5            814     light_l:  CLR ACC.5                      ;P0.7ÖÃ0,P0.6ÖÃ1£¬Ñ¡Í¨¶¨ÊÂë¹Ü1
+25A7 D2E4            815                       SETB ACC.4  
+25A9 F590            816                       MOV P1,A
+25AB 7D02            817                       MOV R5,#2                      ;R5¸³2£¬ÏÂÒ»´ÎÖÐ¶Ïµ½À´£¬Ñ¡Í¨ÊÂë¹Ü2
+25AD 32              818                       RETI                           ;¶¨Ê±Æ÷1ÖÐ¶Ï·µ»Ø
+                     819          ;------------------------------------
+                     820     
+                     821          ;-----------ÊÂë¹Ü3ÏÔÊ¾R3µÍËÄÎ»----------
+25AE 7590FF          822     display2:  MOV P1,#0FFH          ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+25B1 7590FF          823                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+25B4 7590FF          824                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+25B7 00              825                       nop
+25B8 00              826                       NOP
+25B9 00              827                       NOP
+25BA 740F            828                       MOV A,#0FH             ;ÆÁ±ÎR3¸ßËÄÎ»
+25BC 5B              829                       ANL A,R3                       ;½«R3ÓëA½øÐÐÓë²Ù×÷£¬½«R3µÍËÄÎ»´æÖÁAÖÐ
+                     830                       
+25BD D2E5            831                       SETB ACC.5                     ;P0.7ÖÃ1,P0.6ÖÃ0£¬Ñ¡Í¨¶¨ÊÂë¹Ü2
+25BF D2E4            832                       SETB ACC.4
+25C1 F590            833                       MOV P1,A                       ;½«²éµÃµÄÖµ¸³¸øP1£¬ÊÂë¹Ü2µÃµ½ÏÔÊ¾
+25C3 7D03            834                       MOV R5,#3                      ;R5¸³3£¬ÏÂÒ»´ÎÖÐ¶Ïµ½À´£¬Ñ¡Í¨ÊÂë¹Ü3
+25C5 32              835                       RETI                           ;¶¨Ê±Æ÷1ÖÐ¶Ï·µ»Ø
+                     836              ;------------------------------------
+                     837     
+                     838              ;-----------ÊÂë¹Ü2ÏÔÊ¾ÁÁ¶È¸ßËÄÎ»--------
+25C6 7590FF          839     display3: MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+25C9 7590FF          840                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+25CC 7590FF          841                       MOV P1,#0FFH           ;ÇåÁãÊÂë¹Ü,Ïû³»»ÊÂë¹Ü´øÀ´µÄÃ«´Ì
+25CF 00              842                       NOP
+25D0 00              843                       NOP
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    14
+
+25D1 00              844                       NOP
+25D2 74F0            845                       MOV A,#0F0H            ;ÆÁ±ÎR3µÍËÄÎ»
+25D4 5B              846                       ANL A,R3                       ;½«R3ÓëA½øÐÐÓë²Ù×÷£¬½«R3¸ßËÄÎ»´æÖÁAÖÐ
+25D5 C4              847                       SWAP A                         ;½»»»AÖÐµÄ¸ßËÄÎ»ºÍµÍËÄÎ»
+25D6 B40006          848                       CJNE A,#00H,light_h
+25D9 75903F          849                       MOV P1,#3fh
+25DC 7D00            850                       MOV R5,#0                      ;R5¸³0£¬ÏÂÒ»´ÎÖÐ¶Ïµ½À´£¬Ñ¡Í¨ÊÂë¹Ü0
+25DE 32              851                       RETI                           ;¶¨Ê±Æ÷1ÖÐ¶Ï·µ»Ø
+25DF C2E4            852     light_h:  CLR ACC.4              ;P0.7ÖÃ1,P0.6ÖÃ1£¬Ñ¡Í¨¶¨ÊÂë¹Ü3
+25E1 D2E5            853                       SETB ACC.5
+25E3 F590            854                       MOV P1,A                       ;½«²éµÃµÄÖµ¸³¸øP1£¬ÊÂë¹Ü3µÃµ½ÏÔÊ¾
+25E5 7D00            855                       MOV R5,#0                      ;R5¸³0£¬ÏÂÒ»´ÎÖÐ¶Ïµ½À´£¬Ñ¡Í¨ÊÂë¹Ü0
+25E7 32              856                       RETI                           ;¶¨Ê±Æ÷1ÖÐ¶Ï·µ»Ø
+                     857              ;-----------------------------------                     
+                     858             
+                     859     ;-----------------------------------------------
+                     860     ;----------ÁÁ¶È²éÕÒ±í--------------------------------
+2800                 861           ORG  2800H
+                     862     
+2800 FFFEFDFC        863     TABLE: DB  0FFH,0FEH,0FDH,0FCH,0FBH,0FAH,0F9H,0F8H,0F7H,0F6H
+2804 FBFAF9F8                
+2808 F7F6                    
+2810                 864                ORG 2810H
+2810 F5F4F3F2        865                DB  0F5H,0F4H,0F3H,0F2H,0F1H,0F0H,0EFH,0EEH,0EDH,0ECH
+2814 F1F0EFEE                
+2818 EDEC                    
+2820                 866                ORG 2820H
+2820 EBEAE9E8        867                DB  0EBH,0EAH,0E9H,0E8H,0E7H,0E6H,0E5H,0E4H,0E3H,0E2H
+2824 E7E6E5E4                
+2828 E3E2                    
+2830                 868                ORG 2830H
+                     869     
+2830 E0DEDCDA        870                DB  0E0H,0DEH,0DCH,0DAH,0D8H,0D6H,0D4H,0D2H,0D0H,0CEH
+2834 D8D6D4D2                
+2838 D0CE                    
+2840                 871                ORG 2840H
+2840 CCCAC8C6        872                DB  0CCH,0CAH,0C8H,0C6H,0C4H,0C2H,0C0H,0BEH,0BCH,0BAH
+2844 C4C2C0BE                
+2848 BCBA                    
+2850                 873                ORG 2850H
+2850 B8B6B4B2        874                DB  0B8H,0B6H,0B4H,0B2H,0B0H,0AEH,0ACH,0AAH,0A8H,0A6H
+2854 B0AEACAA                
+2858 A8A6                    
+2860                 875                ORG 2860H
+2860 A3A09D9A        876                DB  0A3H,0A0H,9DH,9AH,97H,94H,91H,8EH,8BH,88H
+2864 9794918E                
+2868 8B88                    
+2870                 877                ORG 2870H
+2870 85827F7C        878                DB  85H,82H,7FH,7CH,79H,76H,73H,70H,6DH,6AH
+2874 79767370                
+2878 6D6A                    
+2880                 879                ORG 2880H
+2880 6764615C        880                DB  67H,64H,61H,5CH,5AH,57H,54H,51H,4DH,40H
+2884 5A575451                
+2888 4D40                    
+2890                 881                ORG 2890H
+2890 3A342F28        882                DB  3aH,34H,2fH,28H,23H,1ch,17h,10h,08h,00H  
+2894 231C1710                
+2898 0800                    
+                     883     public  Init_Device
+                     884     
+                     885     INIT SEGMENT CODE
+----                 886         rseg INIT
+                     887     
+                     888     ; Peripheral specific initialization functions,
+                     889     ; Called from the Init_Device label
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    15
+
+0000                 890     PCA_Init:
+0000 75D840          891         mov  PCA0CN,    #040h
+0003 53D9BF          892         anl  PCA0MD,    #0BFh
+0006 75D900          893         mov  PCA0MD,    #000h
+0009 75DA42          894         mov  PCA0CPM0,  #042h
+000C 22              895         ret
+                     896     
+000D                 897     Timer_Init:
+000D 758922          898         mov  TMOD,      #022h
+0010 758B80          899             mov  TL1,       #080h
+0013 758D80          900             MOV TH1,#80h
+0016 75CA4F          901         mov  TMR2RLL,   #04Fh
+0019 75CB9C          902         mov  TMR2RLH,   #09Ch
+001C 75CC4F          903         mov  TMR2L,     #04Fh
+001F 75CD9C          904         mov  TMR2H,     #09Ch
+0022 759208          905             mov  TMR3RLL,   #008h
+0025 7593F6          906         mov  TMR3RLH,   #0f6h
+0028 759408          907         mov  TMR3L,     #008h
+002B 7595F6          908         mov  TMR3H,     #0f6h
+002E 22              909         ret
+                     910     
+002F                 911         Port_IO_Init:
+                     912         ; P0.0  -  Skipped,     Open-Drain, Digital
+                     913         ; P0.1  -  Skipped,     Open-Drain, Digital
+                     914         ; P0.2  -  Skipped,     Open-Drain, Digital
+                     915         ; P0.3  -  Skipped,     Open-Drain, Digital
+                     916         ; P0.4  -  Skipped,     Open-Drain, Digital
+                     917         ; P0.5  -  Skipped,     Open-Drain, Digital
+                     918         ; P0.6  -  Skipped,     Open-Drain, Digital
+                     919         ; P0.7  -  Skipped,     Open-Drain, Digital
+                     920     
+                     921         ; P1.0  -  Skipped,     Open-Drain, Digital
+                     922         ; P1.1  -  Skipped,     Open-Drain, Digital
+                     923         ; P1.2  -  Skipped,     Open-Drain, Digital
+                     924         ; P1.3  -  Skipped,     Open-Drain, Digital
+                     925         ; P1.4  -  Skipped,     Open-Drain, Digital
+                     926         ; P1.5  -  Skipped,     Open-Drain, Digital
+                     927         ; P1.6  -  Skipped,     Open-Drain, Digital
+                     928         ; P1.7  -  Skipped,     Open-Drain, Digital
+                     929         ; P2.0  -  CEX0 (PCA),  Open-Drain, Digital
+                     930         ; P2.1  -  Unassigned,  Open-Drain, Digital
+                     931         ; P2.2  -  Unassigned,  Open-Drain, Digital
+                     932         ; P2.3  -  Unassigned,  Open-Drain, Digital
+                     933     
+002F 75D4FF          934         mov  P0SKIP,    #0FFh
+0032 75D5FF          935         mov  P1SKIP,    #0FFh
+0035 75E241          936         mov  XBR1,      #041h
+0038 22              937         ret
+                     938     
+0039                 939     Interrupts_Init:
+0039 75E420          940         mov  IT01CF,    #020h
+003C 75E680          941             mov  EIE1,      #080h
+003F 75A8AA          942         mov  IE,        #0AAh
+0042 22              943         ret
+                     944     
+                     945     ; Initialization function for device,
+                     946     ; Call Init_Device from your main program
+0043                 947     Init_Device:
+0043 120000   F      948         lcall PCA_Init
+0046 120000   F      949         lcall Timer_Init
+0049 120000   F      950         lcall Port_IO_Init
+004C 120000   F      951         lcall Interrupts_Init
+004F 22              952         ret
+                     953     
+                     954     end
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    16
+
+SYMBOL TABLE LISTING
+------ ----- -------
+
+
+N A M E             T Y P E  V A L U E   ATTRIBUTES
+
+AC . . . . . . . .  B ADDR   00D0H.6 A   
+ACC. . . . . . . .  D ADDR   00E0H   A   
+ACK. . . . . . . .  B ADDR   00C0H.1 A   
+ACKRQ. . . . . . .  B ADDR   00C0H.3 A   
+AD0BUSY. . . . . .  B ADDR   00E8H.4 A   
+AD0CM0 . . . . . .  B ADDR   00E8H.0 A   
+AD0CM1 . . . . . .  B ADDR   00E8H.1 A   
+AD0CM2 . . . . . .  B ADDR   00E8H.2 A   
+AD0EN. . . . . . .  B ADDR   00E8H.7 A   
+AD0INT . . . . . .  B ADDR   00E8H.5 A   
+AD0TM. . . . . . .  B ADDR   00E8H.6 A   
+AD0WINT. . . . . .  B ADDR   00E8H.3 A   
+ADC0CF . . . . . .  D ADDR   00BCH   A   
+ADC0CN . . . . . .  D ADDR   00E8H   A   
+ADC0GTH. . . . . .  D ADDR   00C4H   A   
+ADC0GTL. . . . . .  D ADDR   00C3H   A   
+ADC0H. . . . . . .  D ADDR   00BEH   A   
+ADC0L. . . . . . .  D ADDR   00BDH   A   
+ADC0LTH. . . . . .  D ADDR   00C6H   A   
+ADC0LTL. . . . . .  D ADDR   00C5H   A   
+AMX0N. . . . . . .  D ADDR   00BAH   A   
+AMX0P. . . . . . .  D ADDR   00BBH   A   
+ARBLOST. . . . . .  B ADDR   00C0H.2 A   
+B. . . . . . . . .  D ADDR   00F0H   A   
+CCF0 . . . . . . .  B ADDR   00D8H.0 A   
+CCF1 . . . . . . .  B ADDR   00D8H.1 A   
+CCF2 . . . . . . .  B ADDR   00D8H.2 A   
+CCF3 . . . . . . .  B ADDR   00D8H.3 A   
+CCF4 . . . . . . .  B ADDR   00D8H.4 A   
+CF . . . . . . . .  B ADDR   00D8H.7 A   
+CKCON. . . . . . .  D ADDR   008EH   A   
+CLEAR. . . . . . .  C ADDR   052DH   A   
+CLKSEL . . . . . .  D ADDR   00A9H   A   
+CPT0CN . . . . . .  D ADDR   009BH   A   
+CPT0MD . . . . . .  D ADDR   009DH   A   
+CPT0MX . . . . . .  D ADDR   009FH   A   
+CPT1CN . . . . . .  D ADDR   009AH   A   
+CPT1MD . . . . . .  D ADDR   009CH   A   
+CPT1MX . . . . . .  D ADDR   009EH   A   
+CR . . . . . . . .  B ADDR   00D8H.6 A   
+CY . . . . . . . .  B ADDR   00D0H.7 A   
+DISPLAY. . . . . .  C ADDR   2566H   A   
+DISPLAY0 . . . . .  C ADDR   2575H   A   
+DISPLAY1 . . . . .  C ADDR   258DH   A   
+DISPLAY2 . . . . .  C ADDR   25AEH   A   
+DISPLAY3 . . . . .  C ADDR   25C6H   A   
+DL . . . . . . . .  C ADDR   255DH   A   
+DL0. . . . . . . .  C ADDR   255BH   A   
+DL1. . . . . . . .  C ADDR   2550H   A   
+DL4. . . . . . . .  C ADDR   2559H   A   
+DL6. . . . . . . .  C ADDR   255FH   A   
+DLA. . . . . . . .  C ADDR   2552H   A   
+DLB. . . . . . . .  C ADDR   2554H   A   
+DPH. . . . . . . .  D ADDR   0083H   A   
+DPL. . . . . . . .  D ADDR   0082H   A   
+EA . . . . . . . .  B ADDR   00A8H.7 A   
+EIE1 . . . . . . .  D ADDR   00E6H   A   
+EIP1 . . . . . . .  D ADDR   00F6H   A   
+EMI0CN . . . . . .  D ADDR   00AAH   A   
+ES0. . . . . . . .  B ADDR   00A8H.4 A   
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    17
+
+ESPI0. . . . . . .  B ADDR   00A8H.6 A   
+ET0. . . . . . . .  B ADDR   00A8H.1 A   
+ET1. . . . . . . .  B ADDR   00A8H.3 A   
+ET2. . . . . . . .  B ADDR   00A8H.5 A   
+EX0. . . . . . . .  B ADDR   00A8H.0 A   
+EX1. . . . . . . .  B ADDR   00A8H.2 A   
+F0 . . . . . . . .  B ADDR   00D0H.5 A   
+F1 . . . . . . . .  B ADDR   00D0H.1 A   
+FLACL. . . . . . .  D ADDR   00B5H   A   
+FLKEY. . . . . . .  D ADDR   00B7H   A   
+FLSCL. . . . . . .  D ADDR   00B6H   A   
+HAVEVOICE. . . . .  C ADDR   016AH   A   
+IE . . . . . . . .  D ADDR   00A8H   A   
+IE0. . . . . . . .  B ADDR   0088H.1 A   
+IE1. . . . . . . .  B ADDR   0088H.3 A   
+INIT . . . . . . .  C SEG    0050H       REL=UNIT
+INIT_DEVICE. . . .  C ADDR   0043H   R   SEG=INIT
+INTERRUPTS_INIT. .  C ADDR   0039H   R   SEG=INIT
+IP . . . . . . . .  D ADDR   00B8H   A   
+IT0. . . . . . . .  B ADDR   0088H.0 A   
+IT01CF . . . . . .  D ADDR   00E4H   A   
+IT1. . . . . . . .  B ADDR   0088H.2 A   
+JIANCE . . . . . .  C ADDR   00F3H   A   
+JNOL1. . . . . . .  C ADDR   0520H   A   
+JUDGE. . . . . . .  C ADDR   050CH   A   
+JUDGEL0. . . . . .  C ADDR   05F1H   A   
+JUDGEL1. . . . . .  C ADDR   05F6H   A   
+JUDGEL2. . . . . .  C ADDR   06FCH   A   
+K1 . . . . . . . .  C ADDR   0619H   A   
+K1L2 . . . . . . .  C ADDR   0655H   A   
+K1NOL1 . . . . . .  C ADDR   0652H   A   
+K2 . . . . . . . .  C ADDR   0666H   A   
+K2L2 . . . . . . .  C ADDR   06A5H   A   
+K2NOL1 . . . . . .  C ADDR   06A2H   A   
+K3L2 . . . . . . .  C ADDR   06CDH   A   
+K3NOL1 . . . . . .  C ADDR   06CAH   A   
+K4NOL1 . . . . . .  C ADDR   06EDH   A   
+KEY01. . . . . . .  C ADDR   0500H   A   
+KEY01L2. . . . . .  C ADDR   06F0H   A   
+KEY02. . . . . . .  C ADDR   0503H   A   
+KEY02L2. . . . . .  C ADDR   06F3H   A   
+KEY03. . . . . . .  C ADDR   0506H   A   
+KEY03L2. . . . . .  C ADDR   06F6H   A   
+KEY04. . . . . . .  C ADDR   0509H   A   
+KEY04L2. . . . . .  C ADDR   06F9H   A   
+KEY1 . . . . . . .  C ADDR   060FH   A   
+KEY1L1 . . . . . .  C ADDR   0614H   A   
+KEY2 . . . . . . .  C ADDR   065CH   A   
+KEY3 . . . . . . .  C ADDR   06A8H   A   
+KEY4 . . . . . . .  C ADDR   06D0H   A   
+KONGZHI. . . . . .  C ADDR   071FH   A   
+L1 . . . . . . . .  C ADDR   057BH   A   
+L1G. . . . . . . .  C ADDR   0658H   A   
+L1G1 . . . . . . .  C ADDR   060BH   A   
+L2 . . . . . . . .  C ADDR   058EH   A   
+L3 . . . . . . . .  C ADDR   05A4H   A   
+L4 . . . . . . . .  C ADDR   05B2H   A   
+L5 . . . . . . . .  C ADDR   05BEH   A   
+L6 . . . . . . . .  C ADDR   05CAH   A   
+L7 . . . . . . . .  C ADDR   05D6H   A   
+LIGHT. . . . . . .  C ADDR   0087H   A   
+LIGHT_H. . . . . .  C ADDR   25DFH   A   
+LIGHT_L. . . . . .  C ADDR   25A5H   A   
+LOOP . . . . . . .  C ADDR   0568H   A   
+LOOP0. . . . . . .  C ADDR   05E2H   A   
+LOOP1. . . . . . .  C ADDR   05FCH   A   
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    18
+
+LOOP2. . . . . . .  C ADDR   070EH   A   
+MAIN . . . . . . .  C ADDR   0523H   A   
+MASTER . . . . . .  B ADDR   00C0H.7 A   
+MCE0 . . . . . . .  B ADDR   0098H.5 A   
+MODF . . . . . . .  B ADDR   00F8H.5 A   
+NOJIANCE . . . . .  C ADDR   00B2H   A   
+NOV. . . . . . . .  C ADDR   017FH   A   
+NOV1 . . . . . . .  C ADDR   0139H   A   
+NOV2 . . . . . . .  C ADDR   012DH   A   
+NOV3 . . . . . . .  C ADDR   013EH   A   
+NOVOICE. . . . . .  C ADDR   010EH   A   
+NSSMD0 . . . . . .  B ADDR   00F8H.2 A   
+NSSMD1 . . . . . .  B ADDR   00F8H.3 A   
+OFF. . . . . . . .  C ADDR   0160H   A   
+OSCICL . . . . . .  D ADDR   00B3H   A   
+OSCICN . . . . . .  D ADDR   00B2H   A   
+OSCXCN . . . . . .  D ADDR   00B1H   A   
+OUTEN. . . . . . .  C ADDR   0145H   A   
+OV . . . . . . . .  B ADDR   00D0H.2 A   
+P. . . . . . . . .  B ADDR   00D0H.0 A   
+P0 . . . . . . . .  D ADDR   0080H   A   
+P0MDIN . . . . . .  D ADDR   00F1H   A   
+P0MDOUT. . . . . .  D ADDR   00A4H   A   
+P0SKIP . . . . . .  D ADDR   00D4H   A   
+P1 . . . . . . . .  D ADDR   0090H   A   
+P1MDIN . . . . . .  D ADDR   00F2H   A   
+P1MDOUT. . . . . .  D ADDR   00A5H   A   
+P1SKIP . . . . . .  D ADDR   00D5H   A   
+P2 . . . . . . . .  D ADDR   00A0H   A   
+P2MDIN . . . . . .  D ADDR   00F3H   A   
+P2MDOUT. . . . . .  D ADDR   00A6H   A   
+P2SKIP . . . . . .  D ADDR   00D6H   A   
+P3 . . . . . . . .  D ADDR   00B0H   A   
+P3MDIN . . . . . .  D ADDR   00F4H   A   
+P3MDOUT. . . . . .  D ADDR   00A7H   A   
+PCA0CN . . . . . .  D ADDR   00D8H   A   
+PCA0CPH0 . . . . .  D ADDR   00FCH   A   
+PCA0CPH1 . . . . .  D ADDR   00EAH   A   
+PCA0CPH2 . . . . .  D ADDR   00ECH   A   
+PCA0CPH3 . . . . .  D ADDR   00EEH   A   
+PCA0CPH4 . . . . .  D ADDR   00FEH   A   
+PCA0CPL0 . . . . .  D ADDR   00FBH   A   
+PCA0CPL1 . . . . .  D ADDR   00E9H   A   
+PCA0CPL2 . . . . .  D ADDR   00EBH   A   
+PCA0CPL3 . . . . .  D ADDR   00EDH   A   
+PCA0CPL4 . . . . .  D ADDR   00FDH   A   
+PCA0CPM0 . . . . .  D ADDR   00DAH   A   
+PCA0CPM1 . . . . .  D ADDR   00DBH   A   
+PCA0CPM2 . . . . .  D ADDR   00DCH   A   
+PCA0CPM3 . . . . .  D ADDR   00DDH   A   
+PCA0CPM4 . . . . .  D ADDR   00DEH   A   
+PCA0H. . . . . . .  D ADDR   00FAH   A   
+PCA0L. . . . . . .  D ADDR   00F9H   A   
+PCA0MD . . . . . .  D ADDR   00D9H   A   
+PCA_INIT . . . . .  C ADDR   0000H   R   SEG=INIT
+PCON . . . . . . .  D ADDR   0087H   A   
+PORT_IO_INIT . . .  C ADDR   002FH   R   SEG=INIT
+PS0. . . . . . . .  B ADDR   00B8H.4 A   
+PSCTL. . . . . . .  D ADDR   008FH   A   
+PSPI0. . . . . . .  B ADDR   00B8H.6 A   
+PSW. . . . . . . .  D ADDR   00D0H   A   
+PT0. . . . . . . .  B ADDR   00B8H.1 A   
+PT1. . . . . . . .  B ADDR   00B8H.3 A   
+PT2. . . . . . . .  B ADDR   00B8H.5 A   
+PX0. . . . . . . .  B ADDR   00B8H.0 A   
+PX1. . . . . . . .  B ADDR   00B8H.2 A   
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    19
+
+RB80 . . . . . . .  B ADDR   0098H.2 A   
+RE1. . . . . . . .  C ADDR   0640H   A   
+RE12 . . . . . . .  C ADDR   068DH   A   
+RE3. . . . . . . .  C ADDR   06BAH   A   
+RE4. . . . . . . .  C ADDR   06E0H   A   
+REF0CN . . . . . .  D ADDR   00D1H   A   
+REN0 . . . . . . .  B ADDR   0098H.4 A   
+RI0. . . . . . . .  B ADDR   0098H.0 A   
+RS0. . . . . . . .  B ADDR   00D0H.3 A   
+RS1. . . . . . . .  B ADDR   00D0H.4 A   
+RSTSRC . . . . . .  D ADDR   00EFH   A   
+RT2L0. . . . . . .  C ADDR   00A4H   A   
+RT2L2. . . . . . .  C ADDR   00B1H   A   
+RXOVRN . . . . . .  B ADDR   00F8H.4 A   
+S0MODE . . . . . .  B ADDR   0098H.7 A   
+SBUF0. . . . . . .  D ADDR   0099H   A   
+SCON0. . . . . . .  D ADDR   0098H   A   
+SI . . . . . . . .  B ADDR   00C0H.0 A   
+SMB0CF . . . . . .  D ADDR   00C1H   A   
+SMB0CN . . . . . .  D ADDR   00C0H   A   
+SMB0DAT. . . . . .  D ADDR   00C2H   A   
+SP . . . . . . . .  D ADDR   0081H   A   
+SPI0CFG. . . . . .  D ADDR   00A1H   A   
+SPI0CKR. . . . . .  D ADDR   00A2H   A   
+SPI0CN . . . . . .  D ADDR   00F8H   A   
+SPI0DAT. . . . . .  D ADDR   00A3H   A   
+SPIEN. . . . . . .  B ADDR   00F8H.0 A   
+SPIF . . . . . . .  B ADDR   00F8H.7 A   
+STA. . . . . . . .  B ADDR   00C0H.5 A   
+STO. . . . . . . .  B ADDR   00C0H.4 A   
+T11. . . . . . . .  C ADDR   00BBH   A   
+T1J. . . . . . . .  C ADDR   00EBH   A   
+T1R. . . . . . . .  C ADDR   00C7H   A   
+T2INTU . . . . . .  C ADDR   008CH   A   
+T2L0 . . . . . . .  C ADDR   0095H   A   
+T2L0P. . . . . . .  C ADDR   009BH   A   
+T2L2 . . . . . . .  C ADDR   0098H   A   
+T2L2P. . . . . . .  C ADDR   00A5H   A   
+T2R. . . . . . . .  C ADDR   0120H   A   
+T2SPLIT. . . . . .  B ADDR   00C8H.3 A   
+T2XCLK . . . . . .  B ADDR   00C8H.0 A   
+T3C1 . . . . . . .  C ADDR   0178H   A   
+T3CHULI. . . . . .  C ADDR   007CH   A   
+T3R0 . . . . . . .  C ADDR   015BH   A   
+T3R2 . . . . . . .  C ADDR   0128H   A   
+TABLE. . . . . . .  C ADDR   2800H   A   
+TB80 . . . . . . .  B ADDR   0098H.3 A   
+TCON . . . . . . .  D ADDR   0088H   A   
+TF0. . . . . . . .  B ADDR   0088H.5 A   
+TF1. . . . . . . .  B ADDR   0088H.7 A   
+TF2H . . . . . . .  B ADDR   00C8H.7 A   
+TF2L . . . . . . .  B ADDR   00C8H.6 A   
+TF2LEN . . . . . .  B ADDR   00C8H.5 A   
+TH0. . . . . . . .  D ADDR   008CH   A   
+TH1. . . . . . . .  D ADDR   008DH   A   
+TI0. . . . . . . .  B ADDR   0098H.1 A   
+TIMER_INIT . . . .  C ADDR   000DH   R   SEG=INIT
+TL0. . . . . . . .  D ADDR   008AH   A   
+TL1. . . . . . . .  D ADDR   008BH   A   
+TMOD . . . . . . .  D ADDR   0089H   A   
+TMR2CN . . . . . .  D ADDR   00C8H   A   
+TMR2H. . . . . . .  D ADDR   00CDH   A   
+TMR2L. . . . . . .  D ADDR   00CCH   A   
+TMR2RLH. . . . . .  D ADDR   00CBH   A   
+TMR2RLL. . . . . .  D ADDR   00CAH   A   
+TMR3CN . . . . . .  D ADDR   0091H   A   
+A51 MACRO ASSEMBLER  LIGHT_CONTROL                                                        06/12/2016 22:55:07 PAGE    20
+
+TMR3H. . . . . . .  D ADDR   0095H   A   
+TMR3L. . . . . . .  D ADDR   0094H   A   
+TMR3RLH. . . . . .  D ADDR   0093H   A   
+TMR3RLL. . . . . .  D ADDR   0092H   A   
+TR0. . . . . . . .  B ADDR   0088H.4 A   
+TR1. . . . . . . .  B ADDR   0088H.6 A   
+TR2. . . . . . . .  B ADDR   00C8H.2 A   
+TR7. . . . . . . .  C ADDR   00D9H   A   
+TXBMT. . . . . . .  B ADDR   00F8H.1 A   
+TXMODE . . . . . .  B ADDR   00C0H.6 A   
+VDM0CN . . . . . .  D ADDR   00FFH   A   
+W1 . . . . . . . .  C ADDR   0622H   A   
+W12. . . . . . . .  C ADDR   066FH   A   
+W2 . . . . . . . .  C ADDR   0646H   A   
+W22. . . . . . . .  C ADDR   0693H   A   
+W3 . . . . . . . .  C ADDR   0633H   A   
+W32. . . . . . . .  C ADDR   0680H   A   
+WCOL . . . . . . .  B ADDR   00F8H.6 A   
+X0 . . . . . . . .  C ADDR   2573H   A   
+X1 . . . . . . . .  C ADDR   256CH   A   
+XBR0 . . . . . . .  D ADDR   00E1H   A   
+XBR1 . . . . . . .  D ADDR   00E2H   A   
+XIANSHI. . . . . .  C ADDR   06B6H   A   
+XIAOCHUNV. . . . .  C ADDR   00D0H   A   
+XIAOCHUV . . . . .  C ADDR   018CH   A   
+
+
+REGISTER BANK(S) USED: 0 
+
+
+ASSEMBLY COMPLETE.  0 WARNING(S), 0 ERROR(S)
