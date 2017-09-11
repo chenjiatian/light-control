@@ -1,5 +1,6 @@
 # light-control
 This program is undergraduate course for undergraduates of the School of Optics and Electronic Information of Huazhong University of Science and Technology.The project through our own design of the circuit schematic and programming language to achieve an intelligent lighting control system.
+
 课程要求如下：/Course requirements are as follows：
 智能灯光控制器/Intelligent lighting controller
 设计一基于单片机的智能灯光控制器，主要技术指标如下：/Design intelligent lighting controller based on microcontroller, the main technical indicators are as follows:
